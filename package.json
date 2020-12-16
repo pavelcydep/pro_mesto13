@@ -1,14 +1,14 @@
 {
   "name": "proekt12",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "proekt mesto",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pavlov Pavel Valerevich",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
