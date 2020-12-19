@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const { errorHandler, CastError } = require('../utils/utils');
 
 module.exports.findUser = (req, res) => {
   User.find({})
@@ -6,32 +7,16 @@ module.exports.findUser = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUserById = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user === null) {
-        res.status(404).send({ message: 'Пользователя с таким id не существует' });
+        res.status(404).send({ message: 'карточка или пользователь не найден' });
         return;
       }
       res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Не удалось найти пользователя с id' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
-};
-
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Не удалось найти пользователя с id ' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => { CastError(res, err); });
 };
 
 module.exports.patchUser = (req, res) => {
@@ -42,13 +27,15 @@ module.exports.patchUser = (req, res) => {
     upsert: false,
   })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Такого пользователя нет' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => { errorHandler(res, err); });
 };
+module.exports.createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
 
+    .then((user) => res.send({ data: user }))
+    .catch((err) => { errorHandler(res, err); });
+};
 module.exports.patchUserAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findOneAndUpdate({ _id: req.user._id }, { avatar }, {
@@ -58,9 +45,5 @@ module.exports.patchUserAvatar = (req, res) => {
   })
 
     .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Такого пользователя нет ' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => { errorHandler(res, err); });
 };

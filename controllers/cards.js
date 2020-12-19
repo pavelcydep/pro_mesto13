@@ -1,22 +1,17 @@
 const Card = require('../models/card');
+const { errorHandler, CastError } = require('../utils/utils');
 
 module.exports.findCard = (req, res) => {
   Card.find({})
 
     .then((card) => res.status(200).send(card))
-    .catch((err) => {
-      res.status(500).json({ message: `На сервере произошла ошибка:${err}` });
-    });
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.findByICard = (req, res) => {
   Card.findById(req.params.id)
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Не удалось найти пользователя с id ' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => { CastError(res, err); });
 };
 
 module.exports.createCard = (req, res) => {
@@ -29,11 +24,7 @@ module.exports.createCard = (req, res) => {
           res.status(200).send(createdCard);
         });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Карточки с таким id не существует' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -42,30 +33,24 @@ module.exports.likeCard = (req, res) => {
     { new: true }).populate(['owner', 'likes'])
 
     .then((card) => res.status(200).send(card))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Не удалось найти пользователя с id ' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+
+    .catch((err) => { CastError(res, err); });
 };
 
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Не удалось найти пользователя с id ' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch((err) => { CastError(res, err); });
 };
 
 module.exports.findByICardDelete = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((user) => {
       if (user === null) {
-        res.status(404).send({ message: 'Пользователя с таким id не существует' });
+        res.status(404).send({ message: 'карточка или пользователь не найден' });
         return;
       }
       res.send({ data: user });
-    });
+    })
+    .catch((err) => { CastError(res, err); });
 };
