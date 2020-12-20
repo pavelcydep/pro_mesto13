@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { errorHandler, CastError } = require('../utils/utils');
+const { errorHandler } = require('../utils/utils');
 
 module.exports.findUser = (req, res) => {
   User.find({})
@@ -16,7 +16,7 @@ module.exports.getUserById = (req, res) => {
       }
       res.send({ data: user });
     })
-    .catch((err) => { CastError(res, err); });
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.patchUser = (req, res) => {

@@ -30,7 +30,7 @@ app.use('/', routerCards);
 app.use('/', routerUsers);
 
 app.use('/', (req, res) => {
-  res.status(400).send({
+  res.status(404).send({
     message: 'Запрашиваемый ресурс не найден',
   });
 });

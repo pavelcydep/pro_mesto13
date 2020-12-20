@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { errorHandler, CastError } = require('../utils/utils');
+const { errorHandler } = require('../utils/utils');
 
 module.exports.findCard = (req, res) => {
   Card.find({})
@@ -11,7 +11,7 @@ module.exports.findCard = (req, res) => {
 module.exports.findByICard = (req, res) => {
   Card.findById(req.params.id)
     .then((card) => res.send({ data: card }))
-    .catch((err) => { CastError(res, err); });
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.createCard = (req, res) => {
@@ -34,13 +34,13 @@ module.exports.likeCard = (req, res) => {
 
     .then((card) => res.status(200).send(card))
 
-    .catch((err) => { CastError(res, err); });
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => res.send({ data: card }))
-    .catch((err) => { CastError(res, err); });
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.findByICardDelete = (req, res) => {
@@ -52,5 +52,5 @@ module.exports.findByICardDelete = (req, res) => {
       }
       res.send({ data: user });
     })
-    .catch((err) => { CastError(res, err); });
+    .catch((err) => { errorHandler(res, err); });
 };
