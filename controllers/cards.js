@@ -32,14 +32,25 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }).populate(['owner', 'likes'])
 
-    .then((card) => res.status(200).send(card))
-
+    .then((user) => {
+      if (user === null) {
+        res.status(404).send({ message: 'карточка или пользователь не найден' });
+        return;
+      }
+      res.send({ data: user });
+    })
     .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
-    .then((card) => res.send({ data: card }))
+    .then((user) => {
+      if (user === null) {
+        res.status(404).send({ message: 'карточка или пользователь не найден' });
+        return;
+      }
+      res.send({ data: user });
+    })
     .catch((err) => { errorHandler(res, err); });
 };
 
