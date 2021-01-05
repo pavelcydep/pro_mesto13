@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
@@ -10,7 +10,9 @@ const routerCards = require('./routes/cards');
 const { PORT = 3000 } = process.env;
 const app = express();
 const { createUser, login } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -21,7 +23,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 app.post('/signup', createUser);
 app.post('/signin', login);
-
+app.use(auth);
 app.use('/', routerCards);
 app.use('/', routerUsers);
 
