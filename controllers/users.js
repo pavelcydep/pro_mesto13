@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const CustomError = require('../errors/customError');
+
 const User = require('../models/user');
 const { errorHandler } = require('../utils/utils');
 
@@ -34,10 +34,11 @@ module.exports.patchUser = (req, res) => {
     .catch((err) => { errorHandler(res, err); });
 };
 
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = (req, res) => {
   const { password, email } = req.body;
   if (password.length < 8 || password.trim().length === 0) {
-    throw new CustomError(400, 'Неверный запрос');
+    res.status(401).send({ message: 'неверный пароль' });
+    return;
   }
 
   bcrypt.hash(password, 10).then((hashPassword) => {
@@ -48,18 +49,18 @@ module.exports.createUser = (req, res, next) => {
           res.status(409).send({ message: 'Противоречивый запрос' });
         }
       })
-      .catch(next);
+      .catch((err) => { errorHandler(res, err); });
   });
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = (req, res) => {
   const { password, email } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(next);
+    .catch((err) => { errorHandler(res, err); });
 };
 
 module.exports.patchUserAvatar = (req, res) => {

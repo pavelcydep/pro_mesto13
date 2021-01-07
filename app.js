@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const helmet = require('helmet');
+
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
@@ -12,7 +12,6 @@ const app = express();
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
-app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect('mongodb://localhost:27017/mestodb', {
