@@ -1,22 +1,24 @@
 const Card = require('../models/card');
-const { errorHandler } = require('../utils/utils');
+const CustomError = require('../errors/customError');
 
-module.exports.findCard = (req, res) => {
+module.exports.findCard = (req, res, next) => {
   Card.find({})
 
     .then((card) => res.status(200).send(card))
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
 
-module.exports.findByICard = (req, res) => {
+module.exports.findByICard = (req, res, next) => {
   Card.findById(req.params.id)
+  .orFail(new CustomError(404, 'Данного id нет в базе'))
     .then((card) => res.send({ data: card }))
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
+  .orFail(new CustomError(404,'Данного id нет в базе'))
     .then((card) => {
       Card.findById(card._id).populate(['owner'])
 
@@ -24,44 +26,34 @@ module.exports.createCard = (req, res) => {
           res.status(200).send(createdCard);
         });
     })
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findOneAndUpdate({ _id: req.params.id },
     { $addToSet: { likes: req.user._id } },
     { new: true }).populate(['owner', 'likes'])
-
+    .orFail(new CustomError(404,'Данного id нет в базе'))
     .then((user) => {
-      if (user === null) {
-        res.status(404).send({ message: 'карточка или пользователь не найден' });
-        return;
-      }
-      res.send({ data: user });
+     res.send({ data: user });
     })
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res,next) => {
   Card.findByIdAndRemove(req.params.id)
+  .orFail(new CustomError(404,'Данного id нет в базе'))
     .then((user) => {
-      if (user === null) {
-        res.status(404).send({ message: 'карточка или пользователь не найден' });
-        return;
-      }
       res.send({ data: user });
     })
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
 
-module.exports.findByICardDelete = (req, res) => {
+module.exports.findByICardDelete = (req, res,next) => {
   Card.findByIdAndRemove(req.params.id)
-    .then((user) => {
-      if (user === null) {
-        res.status(404).send({ message: 'карточка или пользователь не найден' });
-        return;
-      }
+  .orFail(new CustomError(404,'Данного id нет в базе'))
+  .then((user) => {
       res.send({ data: user });
     })
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
