@@ -1,49 +1,69 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const CustomError = require('../errors/customError');
 const User = require('../models/user');
-const { errorHandler } = require('../utils/utils');
 
-module.exports.findUser = (req, res) => {
+
+const { JWT_SECRET = 'dev-key' } = process.env;
+module.exports.findUser = (req, res, next) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
+ .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => {
-      if (user === null) {
-        res.status(404).send({ message: 'карточка или пользователь не найден' });
-        return;
-      }
-      res.send({ data: user });
+    res.send({ data: user });
     })
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
 
-module.exports.patchUser = (req, res) => {
+module.exports.patchUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findOneAndUpdate({ _id: req.user._id }, { name, about }, {
     new: true,
     runValidators: true,
     upsert: false,
   })
+  .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
 
-    .then((user) => res.send({ data: user }))
-    .catch((err) => { errorHandler(res, err); });
+module.exports.createUser = (req, res, next) => {
+  const { password, email } = req.body;
+bcrypt.hash(password, 10).then((hashPassword) => {
+    User.create({ password: hashPassword, email })
+      .then((user) => res.status(201).send({ _id: user._id }))
+      .catch((err) => {
+        if (err.code === 11000) {
+          res.status(409).send({ message: 'Противоречивый запрос' });
+        }
+      })
+      .catch(next);
+  });
 };
-module.exports.patchUserAvatar = (req, res) => {
+
+module.exports.login = (req, res, next) => {
+  const { password, email } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch(next);
+};
+
+module.exports.patchUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findOneAndUpdate({ _id: req.user._id }, { avatar }, {
     new: true,
     runValidators: true,
     upsert: false,
   })
-
+  .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => res.status(200).send(user))
-    .catch((err) => { errorHandler(res, err); });
+    .catch(next);
 };

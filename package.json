@@ -11,10 +11,20 @@
   "author": "Pavlov Pavel Valerevich",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "celebrate": "^13.0.4",
     "dotenv": "^8.2.0",
+    "escape-html": "^1.0.3",
     "express": "^4.17.1",
-    "mongoose": "^5.11.0"
+    "express-rate-limit": "^5.2.3",
+    "express-winston": "^4.0.5",
+    "helmet": "^4.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.0",
+    "validator": "^13.5.2",
+    "validator-js": "^0.2.1",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^7.14.0",
