@@ -60,7 +60,7 @@ app.use('/', celebrate({
 }), auth, routerUsers);
 app.use(errorLogger);
 app.use(() => {
-  throw new CustomError(404, 'Запрашиваемый ресурс не найден');
+  throw new CustomError(404, 'Запрашиваемый ресурс не найденнн');
 });
 app.use(errors());
 // eslint-disable-next-line no-unused-vars
