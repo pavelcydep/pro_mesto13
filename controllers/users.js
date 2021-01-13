@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const CustomError = require('../errors/customError');
 const User = require('../models/user');
 
-
 const { JWT_SECRET = 'dev-key' } = process.env;
 module.exports.findUser = (req, res, next) => {
   User.find({})
@@ -13,9 +12,9 @@ module.exports.findUser = (req, res, next) => {
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
- .orFail(new CustomError(404, 'Данный пользователь не найден'))
+    .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => {
-    res.send({ data: user });
+      res.send({ data: user });
     })
     .catch(next);
 };
@@ -27,14 +26,14 @@ module.exports.patchUser = (req, res, next) => {
     runValidators: true,
     upsert: false,
   })
-  .orFail(new CustomError(404, 'Данный пользователь не найден'))
+    .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
   const { password, email } = req.body;
-bcrypt.hash(password, 10).then((hashPassword) => {
+  bcrypt.hash(password, 10).then((hashPassword) => {
     User.create({ password: hashPassword, email })
       .then((user) => res.status(201).send({ _id: user._id }))
       .catch((err) => {
@@ -63,7 +62,7 @@ module.exports.patchUserAvatar = (req, res, next) => {
     runValidators: true,
     upsert: false,
   })
-  .orFail(new CustomError(404, 'Данный пользователь не найден'))
+    .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
