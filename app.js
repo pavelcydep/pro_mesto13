@@ -1,7 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-// eslint-disable-next-line no-unused-vars
-const escape = require('escape-html');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
