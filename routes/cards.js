@@ -7,7 +7,7 @@ const {
 routerCards.get('/cards', findCard);
 routerCards.get('/cards', findByICard);
 routerCards.delete('/cards/:id', celebrate({
-  params: Joi.object().keys({
+params: Joi.object().keys({
     id: Joi.string().hex().required().length(24),
   }),
 }), findByICardDelete);
