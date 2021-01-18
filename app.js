@@ -1,7 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-// eslint-disable-next-line no-unused-vars
-const escape = require('escape-html');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -60,7 +58,7 @@ app.use('/', celebrate({
 }), auth, routerUsers);
 app.use(errorLogger);
 app.use(() => {
-  throw new CustomError(404, 'Запрашиваемый ресурс не найденнн');
+  throw new CustomError(404, 'Запрашиваемый ресурс не найден');
 });
 app.use(errors());
 // eslint-disable-next-line no-unused-vars
