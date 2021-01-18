@@ -1,7 +1,7 @@
 const routerUsers = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  findUser, getUserById, createUser, patchUser, patchUserAvatar,
+  findUser, getUserById, patchUser, patchUserAvatar,
 } = require('../controllers/users');
 
 routerUsers.get('/users', findUser);
@@ -11,7 +11,7 @@ routerUsers.get('/users/:id', celebrate({
   }),
 }), getUserById);
 
-routerUsers.post('/users', createUser);
+
 routerUsers.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
