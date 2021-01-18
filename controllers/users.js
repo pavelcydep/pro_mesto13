@@ -45,6 +45,7 @@ module.exports.createUser = (req, res, next) => {
       });
   });
 };
+ 
 
 module.exports.login = (req, res, next) => {
   const { password, email } = req.body;
