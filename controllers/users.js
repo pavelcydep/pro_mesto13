@@ -35,13 +35,14 @@ module.exports.createUser = (req, res, next) => {
   const { password, email } = req.body;
   bcrypt.hash(password, 10).then((hashPassword) => {
     User.create({ password: hashPassword, email })
-      .then((user) => res.status(201).send({ _id: user._id }))
+      .then((user) => res.status(200).send({ _id: user._id }))
       .catch((err) => {
         if (err.code === 11000) {
-          res.status(409).send({ message: 'Противоречивый запрос' });
+          next(new CustomError(409, err.message));
+        } else {
+          next(new CustomError(400, err.message));
         }
-      })
-      .catch(next);
+      });
   });
 };
 
