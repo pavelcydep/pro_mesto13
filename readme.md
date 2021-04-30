@@ -36,13 +36,35 @@
 - Удаление карточки по её id
 Запрос на `localhost:3000/cards/:cardId` удаляет карточку с переданным после **/cards** идентификатором
 
+
+Как установить проект?
+================
+## Для начала работы вам необходим:
+
+- <a href="https://nodejs.org/en/">NodeJS & npm<a> - среда выполенния кода JavaScript вне браузера. Позволяет писать серверный код для динамических веб-страниц и веб-приложений.
+- <a href="https://gitforwindows.org/">Git Bash<a> если вы используете Windows OS.
+
+## Установка
+
+### Склонировать проект на ПК:
+
+    git clone https://github.com/pavelcydep/neews-explorer-frontend.git
+![alt text](top2.png)   
+
+
+### Установить зависимости
+
+    npm install
+
+![alt text](top3.png)
+
+
+
+
 ## Технологии:
 * Express.js
 * Node.js
 
 
-## Запуск проекта
 
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
 
