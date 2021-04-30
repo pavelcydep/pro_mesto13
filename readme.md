@@ -48,7 +48,7 @@
 
 ### Склонировать проект на ПК:
 
-    git clone https://github.com/pavelcydep/neews-explorer-frontend.git
+    git clone https://github.com/pavelcydep/servis-mesto-api.git
 ![alt text](top2.png)   
 
 
