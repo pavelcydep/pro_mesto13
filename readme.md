@@ -49,14 +49,14 @@
 ### Склонировать проект на ПК:
 
     git clone https://github.com/pavelcydep/servis-mesto-api.git
-![alt text](top2.png)   
+
 
 
 ### Установить зависимости
 
     npm install
 
-![alt text](top3.png)
+
 
 
 
