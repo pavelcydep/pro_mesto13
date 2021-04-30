@@ -64,7 +64,7 @@
 ## Технологии:
 * Express.js
 * Node.js
-![]()
+![](mongo.png)
 
 
 
