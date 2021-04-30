@@ -64,7 +64,9 @@
 ## Технологии:
 
 ![](node100.png)
+
 ![](exp.png)
+
 ![](mongodb.png)
 
 
