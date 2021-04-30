@@ -1,7 +1,7 @@
 
-<p align="center"> <h1>Бэкенд для проекта Mesto</h1>
-    <img src="https://res.cloudinary.com/prysya/image/upload/v1586434550/logo_bdsdvx.svg" width="400">
-     </p>
+<p align="center"> 
+<h1>Бэкенд для проекта Mesto</h1>
+ </p>
      <p align="center"> 
     <img src="" width="400">
      </p>
