@@ -62,10 +62,9 @@
 
 
 ## Технологии:
-* Express.js
-* Node.js
+
 ![](node100.png)
 ![](exp.png)
-
+![](mongodb.png)
 
 
